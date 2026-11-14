@@ -84,6 +84,11 @@ enum {
 /* BIOS boot status tracking */
 static bios_boot_status_t bios_boot_status = BIOS_BOOT_POST;
 
+/* TEST: pre-de8be4315 behaviour, a read or write on a drive with no
+   diskette ends with a missing address mark after 1000 byte times. */
+static int          fdd_notfound     = 0;
+static fdd_drive_t *fdd_notfound_drv = NULL;
+
 fdd_drive_t drives[FDD_NUM];
 
 static const struct
@@ -1067,6 +1072,12 @@ fdd_poll(void *priv)
     if (drv->fmt.poll)
         drv->fmt.poll((void *) drv);
 
+    if (fdd_notfound && (fdd_notfound_drv == drv)) {
+        fdd_notfound--;
+        if (!fdd_notfound)
+            drv->ctrl->noidam(drv->ctrl_priv);
+    }
+
     if (drv->changed)
         drv->ctrl->diskchange_interrupt(drv->ctrl_priv, drv->id);
 }
@@ -1168,6 +1179,10 @@ fdd_readsector(void *priv, const int sector, const int track, const int side,
        empty drive has no change line to check first (360K). */
     if (drv->fmt.readsector != NULL)
         drv->fmt.readsector(drv, sector, track, side, density, sector_size);
+    else {
+        fdd_notfound     = 1000;
+        fdd_notfound_drv = drv;
+    }
 }
 
 void
@@ -1200,6 +1215,10 @@ fdd_writesector(void *priv, const int sector, const int track, const int side,
     /* No diskette: no index pulses, the command never ends (see fdd_readsector()). */
     if (drv->fmt.writesector != NULL)
         drv->fmt.writesector(drv, sector, track, side, density, sector_size);
+    else {
+        fdd_notfound     = 1000;
+        fdd_notfound_drv = drv;
+    }
 }
 
 void
