@@ -1965,7 +1965,6 @@ static const device_config_t dtc_config[] = {
             { .description = "CA00H",    .value = 0xca000 },
             { .description = "D800H",    .value = 0xd8000 },
             { .description = "F400H",    .value = 0xf4000 },
-            { .description = "F800H",    .value = 0xf8000 },
             { .description = ""                           }
         },
         .bios           = { { 0 } }
