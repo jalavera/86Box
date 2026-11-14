@@ -11,7 +11,6 @@
  * Authors: RichardG, <richardg867@gmail.com>
  *
  *          Copyright 2021-2025 RichardG.
- *          Copyright 2026 Xeon3D.
  */
 #include <stdarg.h>
 #include <stdint.h>
@@ -890,7 +889,7 @@ const device_t ak4540_device = {
 const device_t alc100_device = {
     .name          = "Avance Logic ALC100",
     .internal_name = "alc100",
-    .flags         = DEVICE_AC97 | DEVICE_AUDIO_IN, /* see ice1232_device */
+    .flags         = DEVICE_AC97,
     .local         = AC97_CODEC_ALC100,
     .init          = ac97_codec_init,
     .close         = ac97_codec_close,
@@ -932,11 +931,7 @@ const device_t cs4297a_device = {
 const device_t ice1232_device = {
     .name          = "ICEnsemble ICE1232 / VIA VT1611A",
     .internal_name = "ice1232",
-    /* audio input -- this, the ALC100 and the WM9701A are the
-       on-board sound (snd_device) of the VIA 686 boards, whose AC'97
-       controller records through them; Settings enables audio input for
-       the machine's internal sound by this flag. */
-    .flags         = DEVICE_AC97 | DEVICE_AUDIO_IN,
+    .flags         = DEVICE_AC97,
     .local         = AC97_CODEC_ICE1232,
     .init          = ac97_codec_init,
     .close         = ac97_codec_close,
@@ -1006,7 +1001,7 @@ const device_t w83971d_device = {
 const device_t wm9701a_device = {
     .name          = "Wolfson WM9701A",
     .internal_name = "wm9701a",
-    .flags         = DEVICE_AC97 | DEVICE_AUDIO_IN, /* see ice1232_device */
+    .flags         = DEVICE_AC97,
     .local         = AC97_CODEC_WM9701A,
     .init          = ac97_codec_init,
     .close         = ac97_codec_close,
