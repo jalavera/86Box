@@ -1960,9 +1960,11 @@ static const device_config_t dtc_config[] = {
         .file_filter    = NULL,
         .spinner        = { 0 },
         .selection      = {
-            /* TEST ONLY (PC1512): standard address plus two addresses
-               right below the system ROM, so one memory card can fill
-               C0000 up to the controller BIOS. FA00H needs an 8 KB ROM. */
+            /* TEST ONLY (PC1512): standard address, C000H right after
+               the video memory, and two addresses right below the system
+               ROM, so one memory card can fill the rest of the upper
+               memory in one block. FA00H needs an 8 KB ROM. */
+            { .description = "C000H",    .value = 0xc0000 },
             { .description = "C800H",    .value = 0xc8000 },
             { .description = "F800H",    .value = 0xf8000 },
             { .description = "FA00H",    .value = 0xfa000 },
