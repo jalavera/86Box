@@ -1,0 +1,46 @@
+name: Add the other platforms to PC1512 248K
+
+# One-off: adds the remaining builds of run 43703043972 to the release
+# pc1512-248k (it already has Windows 64-bit and macOS Intel).
+
+on:
+  push:
+    branches: [ release-pc1512-240k ]
+    paths: [ .github/workflows/release_pc1512_248k_all.yml ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Download the builds
+        run: |
+          gh api repos/$REPO/actions/artifacts/14158482260/zip > 86Box-macOS-arm64-pc1512-vram-nomirror.20261115-1013.zip
+          gh api repos/$REPO/actions/artifacts/14158010694/zip > 86Box-Windows-ARM64-pc1512-vram-nomirror.20261115-1013.zip
+          gh api repos/$REPO/actions/artifacts/14157735520/zip > 86Box-Linux-x86_64-pc1512-vram-nomirror.20261115-1013.AppImage
+          gh api repos/$REPO/actions/artifacts/14157428007/zip > 86Box-Linux-arm64-pc1512-vram-nomirror.20261115-1013.AppImage
+          ls -l
+      - name: Add them to the release
+        run: |
+          gh release upload pc1512-248k -R $REPO --clobber \
+            86Box-macOS-arm64-pc1512-vram-nomirror.20261115-1013.zip \
+            86Box-Windows-ARM64-pc1512-vram-nomirror.20261115-1013.zip \
+            86Box-Linux-x86_64-pc1512-vram-nomirror.20261115-1013.AppImage \
+            86Box-Linux-arm64-pc1512-vram-nomirror.20261115-1013.AppImage
+          gh release edit pc1512-248k -R $REPO --notes "86Box for the Amstrad PC1512 with 736 KB conventional + 248 KB contiguous upper memory.
+
+          Branch \`pc1512-vram-nomirror\`, commit 7b313ed (build of 15-11-2026):
+          - PC1512: new option \"Mirror video RAM at BC000-BFFFF\" (on by default); off leaves BC000-BFFFF free.
+          - DTC 5150X: BIOS address BC00H.
+          - Test-only patch for 86Box issue #8932 (DTC hard disk boot).
+
+          Needs a patched PC1512 BIOS (40043) and DTC ROM, which are not distributed here.
+          Builds for Windows (64-bit and ARM64), macOS (Intel and Apple Silicon) and Linux (x86_64 and arm64)."
+          gh release view pc1512-248k -R $REPO
