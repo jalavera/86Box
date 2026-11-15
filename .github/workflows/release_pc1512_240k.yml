@@ -1,0 +1,48 @@
+name: Release PC1512 240K
+
+# One-off: publishes the Windows 64-bit and macOS Intel builds of run
+# 43703043972 (branch pc1512-vram-nomirror, 15-11-2026) as a release, so
+# they don't expire with the workflow artifacts.
+
+on:
+  push:
+    branches: [ release-pc1512-240k ]
+    paths: [ .github/workflows/release_pc1512_240k.yml ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Download the builds
+        run: |
+          gh api repos/$REPO/actions/artifacts/14158075527/zip > 86Box-Windows-64-pc1512-vram-nomirror.20261115-1013.zip
+          gh api repos/$REPO/actions/artifacts/14158827476/zip > 86Box-macOS-x86_64-pc1512-vram-nomirror.20261115-1013.zip
+          ls -l *.zip
+          for f in *.zip; do unzip -l "$f" | tail -3; done
+      - name: Create the release
+        run: |
+          cat > notes.md <<'NOTES'
+          86Box for the Amstrad PC1512 with 736 KB conventional + 248 KB contiguous upper memory.
+
+          Branch `pc1512-vram-nomirror`, commit 7b313ed (build of 15-11-2026):
+          - PC1512: new option "Mirror video RAM at BC000-BFFFF" (on by default); off leaves BC000-BFFFF free.
+          - DTC 5150X: BIOS address BC00H.
+          - Test-only patch for 86Box issue #8932 (DTC hard disk boot).
+
+          Needs a patched PC1512 BIOS (40043) and DTC ROM, which are not distributed here.
+          Only the Windows 64-bit and macOS Intel builds are attached.
+          NOTES
+          gh release create pc1512-240k -R $REPO \
+            --target 7b313ed2dc120b1ba61f9bbe63444a3be0ab529c \
+            --title "PC1512 240K (pc1512-vram-nomirror, 15-11-2026)" \
+            --notes-file notes.md \
+            86Box-Windows-64-pc1512-vram-nomirror.20261115-1013.zip \
+            86Box-macOS-x86_64-pc1512-vram-nomirror.20261115-1013.zip
