@@ -177,6 +177,10 @@ static uint8_t crtc_mask[32]   = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+/* Last address of the PC1512 video RAM window: BFFFF with the mirror,
+   BBFFF without it (then BC000-BFFFF is not video memory). */
+static uint32_t pc1512_video_end = 0xbffffu;
+
 static unsigned
 pc1512_video_wait_states(uint32_t address, int write, unsigned size,
                          uint64_t cpu_cycle, void *priv)
@@ -186,7 +190,7 @@ pc1512_video_wait_states(uint32_t address, int write, unsigned size,
     (void) cpu_cycle;
     (void) priv;
 
-    if ((address < 0xb8000u) || (address > 0xbffffu))
+    if ((address < 0xb8000u) || (address > pc1512_video_end))
         return 0;
 
     /* The technical reference specifies 12 to 46 clocks.  Match the existing
@@ -691,7 +695,11 @@ vid_init_1512(amstrad_t *ams)
     vid->cgamode = 0x12;
 
     timer_add(&vid->timer, vid_poll_1512, vid, 1);
-    mem_mapping_add(&vid->cga.mapping, 0xb8000, 0x08000,
+    /* The video RAM is 16 KB and is mirrored at BC000-BFFFF.  Without the
+       mirror, that range is left free, for example for an option ROM. */
+    pc1512_video_end = device_get_config_int("vram_mirror") ? 0xbffffu : 0xbbfffu;
+    mem_mapping_add(&vid->cga.mapping, 0xb8000,
+                    pc1512_video_end - 0xb8000u + 1u,
                     vid_read_1512, NULL, NULL, vid_write_1512, NULL, NULL,
                     NULL, 0, vid);
     io_sethandler(0x03d0, 16,
@@ -797,6 +805,17 @@ const device_config_t vid_1512_config[] = {
             { .description = "Diagnostic mode", .value = 0 },
             { .description = ""                            }
         },
+        .bios           = { { 0 } }
+    },
+    {
+        .name           = "vram_mirror",
+        .description    = "Mirror video RAM at BC000-BFFFF",
+        .type           = CONFIG_BINARY,
+        .default_string = NULL,
+        .default_int    = 1,
+        .file_filter    = NULL,
+        .spinner        = { 0 },
+        .selection      = { { 0 } },
         .bios           = { { 0 } }
     },
     { .name = "", .description = "", .type = CONFIG_END }

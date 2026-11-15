@@ -1961,6 +1961,7 @@ static const device_config_t dtc_config[] = {
         .spinner        = { 0 },
         .selection      = {
             { .description = "Disabled", .value = 0x00000 },
+            { .description = "BC00H",    .value = 0xbc000 },
             { .description = "C800H",    .value = 0xc8000 },
             { .description = "CA00H",    .value = 0xca000 },
             { .description = "D800H",    .value = 0xd8000 },

@@ -2582,6 +2582,9 @@ msgstr "Startadress"
 msgid "Allow RAM up to the system ROM"
 msgstr ""
 
+msgid "Mirror video RAM at BC000-BFFFF"
+msgstr ""
+
 msgid "Contiguous Size"
 msgstr "Angränsande storlek"
 

@@ -2567,6 +2567,9 @@ msgstr "Adreça inicial"
 msgid "Allow RAM up to the system ROM"
 msgstr "Permet RAM fins a la ROM del sistema"
 
+msgid "Mirror video RAM at BC000-BFFFF"
+msgstr "Mirall de la memòria de vídeo a BC000-BFFFF"
+
 msgid "Contiguous Size"
 msgstr "Mida contígua"
 
