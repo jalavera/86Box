@@ -1960,11 +1960,12 @@ static const device_config_t dtc_config[] = {
         .file_filter    = NULL,
         .spinner        = { 0 },
         .selection      = {
-            { .description = "Disabled", .value = 0x00000 },
+            /* TEST ONLY (PC1512): standard address plus two addresses
+               right below the system ROM, so one memory card can fill
+               C0000 up to the controller BIOS. FA00H needs an 8 KB ROM. */
             { .description = "C800H",    .value = 0xc8000 },
-            { .description = "CA00H",    .value = 0xca000 },
-            { .description = "D800H",    .value = 0xd8000 },
-            { .description = "F400H",    .value = 0xf4000 },
+            { .description = "F800H",    .value = 0xf8000 },
+            { .description = "FA00H",    .value = 0xfa000 },
             { .description = ""                           }
         },
         .bios           = { { 0 } }
