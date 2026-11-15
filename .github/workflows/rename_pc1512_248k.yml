@@ -1,0 +1,29 @@
+name: Rename release to PC1512 248K
+
+# One-off: the release made by release_pc1512_240k.yml is about 248 KB of
+# upper memory, not 240 KB. Renames its tag and title (the files stay).
+
+on:
+  push:
+    branches: [ release-pc1512-240k ]
+    paths: [ .github/workflows/rename_pc1512_248k.yml ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Rename the release and its tag
+        run: |
+          gh release edit pc1512-240k -R $REPO \
+            --tag pc1512-248k \
+            --target 7b313ed2dc120b1ba61f9bbe63444a3be0ab529c \
+            --title "PC1512 248K (pc1512-vram-nomirror, 15-11-2026)"
+          gh api -X DELETE repos/$REPO/git/refs/tags/pc1512-240k || true
+          gh release view pc1512-248k -R $REPO
