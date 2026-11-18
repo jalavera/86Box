@@ -6,8 +6,9 @@ on:
     paths:
       - .github/workflows/daily-pc1512.yml
   schedule:
-    # 18:00 in Catalonia during winter (UTC+1); 19:00 during summer.
-    - cron: "0 17 * * *"
+    # Catalonia: 18:00 CET in winter, 18:00 CEST in summer.
+    - cron: "0 17 * 11,12,1,2,3 *"
+    - cron: "0 16 * 4,5,6,7,8,9,10 *"
 
 permissions:
   contents: write
@@ -30,11 +31,13 @@ jobs:
           fetch-depth: 0
       - name: Merge latest official 86Box
         run: |
+          BASE_SHA=$(git rev-parse HEAD)
           git remote add upstream https://github.com/86Box/86Box.git
           git fetch upstream master
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git merge --no-edit --no-ff upstream/master
+          # Keep this fork branch\x27s CI definitions: the GitHub App token\n          # is intentionally not granted the separate workflows permission.\n          rm -rf .github/workflows\n          git checkout "$BASE_SHA" -- .github/workflows\n          git add -A .github/workflows\n          git commit --amend --no-edit
       - name: Push updated branch
         id: push
         run: |
