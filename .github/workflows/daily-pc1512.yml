@@ -110,7 +110,11 @@ jobs:
 
       - name: Configure
         run: |
-          cmake -S . -B build --preset development -D QT=off -D USE_QT6=off -D USE_SDL_SHADER=on -D LibArchive_ROOT="$(brew --prefix libarchive 2>/dev/null || true)"
+          if [ "${{ matrix.platform }}" = "macos" ]; then
+            cmake -S . -B build --preset development -D QT=off -D USE_QT6=off -D USE_SDL_SHADER=off -D LibArchive_ROOT="$(brew --prefix libarchive)"
+          else
+            cmake -S . -B build --preset development -D QT=off -D USE_QT6=off -D USE_SDL_SHADER=off
+          fi
 
       - name: Compile
         run: cmake --build build --parallel
