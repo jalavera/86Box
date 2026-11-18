@@ -1,0 +1,149 @@
+name: PC1512 daily builds
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - .github/workflows/daily-pc1512.yml
+  schedule:
+    # 18:00 in Catalonia during winter (UTC+1); 19:00 during summer.
+    - cron: "0 17 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pc1512-daily-builds
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Update private branch from upstream
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.push.outputs.sha }}
+    steps:
+      - name: Checkout private branch
+        uses: actions/checkout@v4
+        with:
+          ref: pc1512-vram-nomirror
+          fetch-depth: 0
+      - name: Merge latest official 86Box
+        run: |
+          git remote add upstream https://github.com/86Box/86Box.git
+          git fetch upstream master
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git merge --no-edit --no-ff upstream/master
+      - name: Push updated branch
+        id: push
+        run: |
+          git push origin HEAD:pc1512-vram-nomirror
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build ${{ matrix.label }}
+    needs: sync
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: Linux x86_64
+            os: ubuntu-26.04
+            platform: linux
+          - label: Linux ARM64
+            os: ubuntu-26.04-arm
+            platform: linux
+          - label: macOS Apple Silicon
+            os: macos-15
+            platform: macos
+          - label: macOS Intel
+            os: macos-15-intel
+            platform: macos
+          - label: Windows x64
+            os: windows-2022
+            platform: windows
+            msystem: UCRT64
+          - label: Windows ARM64
+            os: windows-11-arm
+            platform: windows
+            msystem: CLANGARM64
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: ${{ matrix.platform == 'windows' && 'msys2 {0}' || 'bash' }}
+    steps:
+      - name: Checkout updated source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.sync.outputs.sha }}
+          fetch-depth: 0
+
+      - name: Install Linux dependencies
+        if: matrix.platform == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential ninja-build cmake pkg-config \
+            libfreetype-dev libgles2-mesa-dev libsdl3-dev libpng-dev \
+            librtmidi-dev libopenal-dev libslirp-dev libfluidsynth-dev \
+            libvdeplug-dev libserialport-dev libzstd-dev
+
+      - name: Install macOS dependencies
+        if: matrix.platform == 'macos'
+        run: |
+          brew install sdl3 rtmidi openal-soft fluidsynth libslirp vde libserialport vulkan-headers zstd
+
+      - name: Prepare Windows MSYS2
+        if: matrix.platform == 'windows'
+        uses: ./.github/actions/setup-msys2
+        with:
+          msystem: ${{ matrix.msystem }}
+          qt6: false
+
+      - name: Configure
+        run: |
+          cmake -S . -B build --preset development -D QT=off -D USE_QT6=off -D USE_SDL_SHADER=on
+
+      - name: Compile
+        run: cmake --build build --parallel
+
+      - name: Install package
+        run: |
+          cmake --install build --prefix package
+          mkdir -p dist
+          if [ "${{ matrix.platform }}" = "windows" ]; then
+            7z a "dist/86Box-${{ matrix.label }}.zip" package
+          else
+            tar -czf "dist/86Box-${{ matrix.label }}.tar.gz" -C package .
+          fi
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: 86Box-${{ matrix.label }}
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 7
+
+  release:
+    name: Publish daily release
+    needs: [sync, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all binaries
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ needs.sync.outputs.sha }}
+        run: |
+          tag="daily-$(date -u +%Y%m%d)-${{ github.run_number }}"
+          gh release create "$tag" release-assets/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "86Box daily build $(date -u +%Y-%m-%d)" \
+            --prerelease \
+            --target "$SOURCE_SHA" \
+            --notes "Daily build of jalavera/86Box branch pc1512-vram-nomirror, synchronized with upstream 86Box/master. Source: $SOURCE_SHA"
