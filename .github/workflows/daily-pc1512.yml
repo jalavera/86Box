@@ -127,11 +127,7 @@ jobs:
         run: |
           cmake --install build --prefix package
           mkdir -p dist
-          if [ "${{ matrix.platform }}" = "windows" ]; then
-            cmake -E tar cf "dist/86Box-${{ matrix.label }}.zip" --format=zip package
-          else
-            tar -czf "dist/86Box-${{ matrix.label }}.tar.gz" -C package .
-          fi
+          cmake -E tar cf "dist/86Box-${{ matrix.label }}.zip" --format=zip package
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
