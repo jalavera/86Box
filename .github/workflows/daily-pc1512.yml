@@ -133,7 +133,7 @@ jobs:
             tar -czf "dist/86Box-${{ matrix.label }}.tar.gz" -C package .
           fi
 
-      - name: Upload build
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: 86Box-${{ matrix.label }}
@@ -141,25 +141,18 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-  release:
-    name: Publish daily release
-    needs: [sync, build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download all binaries
-        uses: actions/download-artifact@v4
-        with:
-          path: release-assets
-          merge-multiple: true
-      - name: Create GitHub Release
+      - name: Publish binary to daily GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
           SOURCE_SHA: ${{ needs.sync.outputs.sha }}
         run: |
           tag="daily-$(date -u +%Y%m%d)-${{ github.run_number }}"
-          gh release create "$tag" release-assets/* \
-            --repo "$GITHUB_REPOSITORY" \
-            --title "86Box daily build $(date -u +%Y-%m-%d)" \
-            --prerelease \
-            --target "$SOURCE_SHA" \
-            --notes "Daily build of jalavera/86Box branch pc1512-vram-nomirror, synchronized with upstream 86Box/master. Source: $SOURCE_SHA"
+          title="86Box daily build $(date -u +%Y-%m-%d)"
+          notes="Daily build of jalavera/86Box branch pc1512-vram-nomirror, synchronized with upstream 86Box/master. Source: $SOURCE_SHA"
+          # All matrix jobs share one release. The first creates it; the
+          # others reuse it and upload their own uniquely named asset.
+          gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" \
+              --title "$title" --prerelease --target "$SOURCE_SHA" --notes "$notes" || \
+            gh release view "$tag" --repo "$GITHUB_REPOSITORY"
+          gh release upload "$tag" dist/* --repo "$GITHUB_REPOSITORY"
