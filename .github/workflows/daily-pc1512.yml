@@ -94,12 +94,12 @@ jobs:
           sudo apt-get install -y build-essential ninja-build cmake pkg-config \
             libfreetype-dev libgles2-mesa-dev libsdl3-dev libpng-dev \
             librtmidi-dev libopenal-dev libslirp-dev libfluidsynth-dev \
-            libvdeplug-dev libserialport-dev libzstd-dev
+            libvdeplug-dev libserialport-dev libzstd-dev libarchive-dev
 
       - name: Install macOS dependencies
         if: matrix.platform == 'macos'
         run: |
-          brew install sdl3 rtmidi openal-soft fluidsynth libslirp vde libserialport vulkan-headers zstd
+          brew install sdl3 rtmidi openal-soft fluidsynth libslirp vde libserialport vulkan-headers zstd libarchive
 
       - name: Prepare Windows MSYS2
         if: matrix.platform == 'windows'
@@ -110,7 +110,7 @@ jobs:
 
       - name: Configure
         run: |
-          cmake -S . -B build --preset development -D QT=off -D USE_QT6=off -D USE_SDL_SHADER=on
+          cmake -S . -B build --preset development -D QT=off -D USE_QT6=off -D USE_SDL_SHADER=on -D LibArchive_ROOT="$(brew --prefix libarchive 2>/dev/null || true)"
 
       - name: Compile
         run: cmake --build build --parallel
