@@ -37,7 +37,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git merge --no-edit --no-ff upstream/master
-          # Keep this fork branch\x27s CI definitions: the GitHub App token\n          # is intentionally not granted the separate workflows permission.\n          rm -rf .github/workflows\n          git checkout "$BASE_SHA" -- .github/workflows\n          git add -A .github/workflows\n          git commit --amend --no-edit
+          # Keep this fork branch's CI definitions: the GitHub App token
+          # is intentionally not granted the separate workflows permission.
+          rm -rf .github/workflows
+          git checkout "$BASE_SHA" -- .github/workflows
+          git add -A .github/workflows
+          git commit --amend --no-edit
       - name: Push updated branch
         id: push
         run: |
