@@ -51,7 +51,7 @@ msgstr "&Skryť stavový riadok"
 msgid "Hide &toolbar"
 msgstr "Skryť panel &nástrojov"
 
-msgid "&Resizeable window"
+msgid "&Resizable window"
 msgstr "&Premenná veľkosť okna"
 
 msgid "R&emember size && position"
@@ -270,6 +270,18 @@ msgstr ""
 msgid "All &notes off"
 msgstr ""
 
+msgid "Show MIDI &LCD"
+msgstr ""
+
+msgid "MIDI LCD"
+msgstr ""
+
+msgid "Always on &top"
+msgstr ""
+
+msgid "&Close"
+msgstr ""
+
 msgid "Begin trace"
 msgstr "Začať trace"
 
@@ -324,8 +336,8 @@ msgstr "&Vystrihnúť"
 msgid "Reload previous image"
 msgstr "Načítať znova predchádzajúci obraz"
 
-msgid "&Folder…"
-msgstr "&Zložka…"
+msgid "Mount &folder…"
+msgstr "Pripojiť &zložku…"
 
 msgid "Preferences"
 msgstr "Predvoľby"
@@ -3777,7 +3789,7 @@ msgstr ""
 msgid "The search is limited to %1 bytes."
 msgstr ""
 
-msgid "Searching memory..."
+msgid "Searching memory…"
 msgstr ""
 
 msgid "The search was cancelled. The selection did not move."
@@ -3813,7 +3825,7 @@ msgstr ""
 msgid "Copy selection (ASCII)"
 msgstr ""
 
-msgid "Fill selection..."
+msgid "Fill selection…"
 msgstr ""
 
 msgid "Copy address"
@@ -3822,7 +3834,7 @@ msgstr ""
 msgid "Disassemble here"
 msgstr ""
 
-msgid "Dump memory from here..."
+msgid "Dump memory from here…"
 msgstr ""
 
 msgid "Memory viewer"
@@ -3852,7 +3864,7 @@ msgstr ""
 msgid "Live update"
 msgstr ""
 
-msgid "Dump..."
+msgid "Dump…"
 msgstr ""
 
 msgid "Commands"
@@ -3897,7 +3909,7 @@ msgstr ""
 msgid "Search downwards from the selection (F3)"
 msgstr ""
 
-msgid "Range..."
+msgid "Range…"
 msgstr ""
 
 msgid "Search within an address range instead of all memory"
@@ -4005,7 +4017,7 @@ msgstr ""
 msgid "Stopped."
 msgstr ""
 
-msgid "Stepping..."
+msgid "Stepping…"
 msgstr ""
 
 msgid "Running."
@@ -4077,8 +4089,11 @@ msgstr ""
 msgid "cleared"
 msgstr ""
 
-msgid "%1 breakpoint(s), linear addresses:"
-msgstr ""
+msgid "%n breakpoint(s), linear addresses:"
+msgid_plural "%n breakpoints, linear addresses:"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 msgid "Pause the processor before accessing I/O ports."
 msgstr ""
@@ -4087,9 +4102,6 @@ msgid "Unknown command or invalid arguments. Type help for syntax."
 msgstr ""
 
 msgid "Dump memory"
-msgstr ""
-
-msgid "Browse..."
 msgstr ""
 
 msgid "Start (hex, register or seg:off):"
@@ -4110,7 +4122,7 @@ msgstr ""
 msgid "Only RAM and other directly mapped memory is read. Unmapped and inaccessible bytes are not read; the fill byte is written in their place."
 msgstr ""
 
-msgid "Binary files (*.bin);;All files (*)"
+msgid "Binary files"
 msgstr ""
 
 msgid "The length must be a hex number above 0."
@@ -4122,7 +4134,7 @@ msgstr ""
 msgid "Could not open %1 for writing."
 msgstr ""
 
-msgid "Dumping memory..."
+msgid "Dumping memory…"
 msgstr ""
 
 msgid "Could not write to %1."
@@ -4260,7 +4272,7 @@ msgstr ""
 msgid "Caller ID between emulator instances (enable on both)"
 msgstr ""
 
-msgid "Caller ID sent when dialling (number,name)"
+msgid "Caller ID sent when dialing (number,name)"
 msgstr ""
 
 msgid "Network to guest queue limit (back-pressure)"
@@ -4309,4 +4321,37 @@ msgid "4-port USB 1.1 hub"
 msgstr ""
 
 msgid "USB Mass Storage"
+msgstr ""
+
+msgid "Mount folder as a temporary floppy"
+msgstr ""
+
+msgid "The selected drive does not support folder mounting."
+msgstr ""
+
+msgid "The contents exceed the capacity of the configured floppy drive."
+msgstr ""
+
+msgid "Mount folder as a temporary removable disk"
+msgstr ""
+
+msgid "Unable to mount folder or archive"
+msgstr ""
+
+msgid "The contents don't fit on any medium the drive takes, or a file is 4 GB or larger."
+msgstr ""
+
+msgid "There are too many files in the top folder for the root directory of the medium."
+msgstr ""
+
+msgid "The temporary image could not be written."
+msgstr ""
+
+msgid "There is not enough memory to build the image."
+msgstr ""
+
+msgid "The folder or archive could not be read."
+msgstr ""
+
+msgid "Archives"
 msgstr ""

@@ -24,6 +24,7 @@ class MainWindow;
 }
 
 class MachineStatus;
+class MidiLcdWindow;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -189,11 +190,15 @@ private:
     std::shared_ptr<MediaMenu>     mm;
     QMenu                         *dynarecMenu  = nullptr;
     QActionGroup                  *midiOutGroup = nullptr;
+    MidiLcdWindow                 *midiLcd      = nullptr;
+    class PcCardMenu              *pcCardMenu   = nullptr;
 
     bool hasKanaLock();
     void refreshMidiOutMenu();
     void switchMidiOut(int device, int port = -1);
+    void showMidiLcd(bool show);
     void updateShortcuts();
+    void updateMenuKeyboardState();
     void updatePowerOffAction();
     void refreshDisplayRatioActions();
     bool isMainWindowOrRendererActive() const;
@@ -208,6 +213,9 @@ private:
     bool shownonce           = false;
     bool resizableonce       = false;
     bool vnc_enabled         = false;
+
+    /* -1 until the menu keyboard state has been initialized. */
+    int menu_keyboard_state = -1;
 
     /* Full screen ON and OFF signals */
     bool fs_on_signal  = false;

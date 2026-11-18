@@ -51,7 +51,7 @@ msgstr "&Statusbalk verbergen"
 msgid "Hide &toolbar"
 msgstr "&Toolbar verbergen"
 
-msgid "&Resizeable window"
+msgid "&Resizable window"
 msgstr "&Venster met aanpasbare grootte"
 
 msgid "R&emember size && position"
@@ -270,6 +270,18 @@ msgstr ""
 msgid "All &notes off"
 msgstr ""
 
+msgid "Show MIDI &LCD"
+msgstr ""
+
+msgid "MIDI LCD"
+msgstr ""
+
+msgid "Always on &top"
+msgstr ""
+
+msgid "&Close"
+msgstr ""
+
 msgid "Begin trace"
 msgstr "Begin traceren"
 
@@ -324,8 +336,8 @@ msgstr "&Leeg"
 msgid "Reload previous image"
 msgstr "Herlaad vorig imagebestand"
 
-msgid "&Folder…"
-msgstr "&Map…"
+msgid "Mount &folder…"
+msgstr "&Map aankoppelen…"
 
 msgid "Preferences"
 msgstr "Voorkeuren"
@@ -3816,8 +3828,8 @@ msgstr "Er is geen toegewezen geheugen in het opgevraagde bereik."
 msgid "The search is limited to %1 bytes."
 msgstr "De zoekopdracht is beperkt to %1 bytes."
 
-msgid "Searching memory..."
-msgstr "Geheugen aan het doorzoeken..."
+msgid "Searching memory…"
+msgstr "Geheugen aan het doorzoeken…"
 
 msgid "The search was cancelled. The selection did not move."
 msgstr "De zoekopdracht was afgebroken. De selectie is niet verplaatst."
@@ -3854,8 +3866,8 @@ msgstr "Kopieer selectie (hex)"
 msgid "Copy selection (ASCII)"
 msgstr "Kopieer selectie (ASCII)"
 
-msgid "Fill selection..."
-msgstr "Vul selectie..."
+msgid "Fill selection…"
+msgstr "Vul selectie…"
 
 msgid "Copy address"
 msgstr "Kopieer adres"
@@ -3863,8 +3875,8 @@ msgstr "Kopieer adres"
 msgid "Disassemble here"
 msgstr "Hier disassembleren"
 
-msgid "Dump memory from here..."
-msgstr "Dump geheugen vanaf hier..."
+msgid "Dump memory from here…"
+msgstr "Dump geheugen vanaf hier…"
 
 msgid "Memory viewer"
 msgstr "Geheugenviewer"
@@ -3893,8 +3905,8 @@ msgstr "Uitvoeren"
 msgid "Live update"
 msgstr "Live bijwerken"
 
-msgid "Dump..."
-msgstr "Dump..."
+msgid "Dump…"
+msgstr "Dump…"
 
 msgid "Commands"
 msgstr "Opdrachten"
@@ -3942,8 +3954,8 @@ msgstr "Vind volgende"
 msgid "Search downwards from the selection (F3)"
 msgstr "Achteruit zoeken vanaf de selectie (F3)"
 
-msgid "Range..."
-msgstr "Bereik..."
+msgid "Range…"
+msgstr "Bereik…"
 
 msgid "Search within an address range instead of all memory"
 msgstr "Zoek in een adresbereik in plaats van het gehele geheugen"
@@ -4062,8 +4074,8 @@ msgstr "Gestopt na stapsgewijs uitvoeren."
 msgid "Stopped."
 msgstr "Gestopt."
 
-msgid "Stepping..."
-msgstr "Stapsgewijs uitvoeren..."
+msgid "Stepping…"
+msgstr "Stapsgewijs uitvoeren…"
 
 msgid "Running."
 msgstr "Actief."
@@ -4180,8 +4192,10 @@ msgstr "gezet"
 msgid "cleared"
 msgstr "gewist"
 
-msgid "%1 breakpoint(s), linear addresses:"
-msgstr "%1 onderbrekingspunt(en), lineaire adressen:"
+msgid "%n breakpoint(s), linear addresses:"
+msgid_plural "%n breakpoints, linear addresses:"
+msgstr[0] "%1 onderbrekingspunt, lineaire adressen:"
+msgstr[1] "%1 onderbrekingspunten, lineaire adressen:"
 
 msgid "Pause the processor before accessing I/O ports."
 msgstr "Pauzeer de processor voordat I/O-poorten benaderd worden."
@@ -4191,9 +4205,6 @@ msgstr "Onbekende opdracht of ongeldige argumenten. Typ help voor de syntax."
 
 msgid "Dump memory"
 msgstr "Dump geheugen"
-
-msgid "Browse..."
-msgstr "Bladeren..."
 
 msgid "Start (hex, register or seg:off):"
 msgstr "Start (hexadecimaal, register of seg:off):"
@@ -4216,8 +4227,8 @@ msgstr ""
 "toegewezen en niet-toegankelijke bytes worden niet uitgelezen; in plaats "
 "daarvan wordt de opvulbyte ingevuld."
 
-msgid "Binary files (*.bin);;All files (*)"
-msgstr "Binaire bestanden (*.bin);;Alle bestanden (*)"
+msgid "Binary files"
+msgstr "Binaire bestanden"
 
 msgid "The length must be a hex number above 0."
 msgstr "De lengte moet een hexadecimaal getal groter dan 0 zijn."
@@ -4228,8 +4239,8 @@ msgstr "De opvulbyte moet een hexadecimaal getal in het bereik 00 en FF zijn."
 msgid "Could not open %1 for writing."
 msgstr "Kon %1 niet openen voor schrijfbewerking."
 
-msgid "Dumping memory..."
-msgstr "Geheugen aan het dumpen..."
+msgid "Dumping memory…"
+msgstr "Geheugen aan het dumpen…"
 
 msgid "Could not write to %1."
 msgstr "Kon niet schrijven naar %1."
@@ -4368,7 +4379,7 @@ msgstr "Uit (alleen met +VDR=1)"
 msgid "Caller ID between emulator instances (enable on both)"
 msgstr "Beller-ID tussen emulatorinstanties (op beide inschakelen)"
 
-msgid "Caller ID sent when dialling (number,name)"
+msgid "Caller ID sent when dialing (number,name)"
 msgstr "Beller-ID verzenden bij het bellen (nummer,naam)"
 
 msgid "Network to guest queue limit (back-pressure)"
@@ -4422,3 +4433,36 @@ msgstr "4-poorts USB 1.1-hub"
 
 msgid "USB Mass Storage"
 msgstr "USB-massaopslag"
+
+msgid "Mount folder as a temporary floppy"
+msgstr ""
+
+msgid "The selected drive does not support folder mounting."
+msgstr ""
+
+msgid "The contents exceed the capacity of the configured floppy drive."
+msgstr ""
+
+msgid "Mount folder as a temporary removable disk"
+msgstr ""
+
+msgid "Unable to mount folder or archive"
+msgstr ""
+
+msgid "The contents don't fit on any medium the drive takes, or a file is 4 GB or larger."
+msgstr ""
+
+msgid "There are too many files in the top folder for the root directory of the medium."
+msgstr ""
+
+msgid "The temporary image could not be written."
+msgstr ""
+
+msgid "There is not enough memory to build the image."
+msgstr ""
+
+msgid "The folder or archive could not be read."
+msgstr ""
+
+msgid "Archives"
+msgstr ""
