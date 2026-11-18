@@ -113,7 +113,7 @@ jobs:
       - name: Configure
         run: |
           if [ "${{ matrix.platform }}" = "macos" ]; then
-            cmake -S . -B build --preset development -D QT=off -D USE_QT6=off -D USE_SDL_SHADER=off -D LibArchive_ROOT="$(brew --prefix libarchive)"
+            cmake -S . -B build --preset development -D QT=off -D USE_QT6=off -D USE_SDL_SHADER=off -D LibArchive_ROOT="$(brew --prefix libarchive)" -D OPENAL_INCLUDE_DIR="$(brew --prefix openal-soft)/include" -D OPENAL_LIBRARY="$(brew --prefix openal-soft)/lib/libopenal.dylib"
           else
             cmake -S . -B build --preset development -D QT=off -D USE_QT6=off -D USE_SDL_SHADER=off
           fi
@@ -126,7 +126,7 @@ jobs:
           cmake --install build --prefix package
           mkdir -p dist
           if [ "${{ matrix.platform }}" = "windows" ]; then
-            7z a "dist/86Box-${{ matrix.label }}.zip" package
+            cmake -E tar cf "dist/86Box-${{ matrix.label }}.zip" --format=zip package
           else
             tar -czf "dist/86Box-${{ matrix.label }}.tar.gz" -C package .
           fi
