@@ -6,9 +6,9 @@ on:
     paths:
       - .github/workflows/daily-pc1512.yml
   schedule:
-    # Catalonia: 18:00 CET in winter, 18:00 CEST in summer.
-    - cron: "0 17 * 11,12,1,2,3 *"
-    - cron: "0 16 * 4,5,6,7,8,9,10 *"
+    # Daily lightweight check; the build gate below runs every 72 hours.
+    # 03:17 UTC avoids the top of the hour and is a relatively quiet period.
+    - cron: "17 3 * * *"
 
 permissions:
   contents: write
@@ -18,8 +18,36 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  schedule-gate:
+    name: Check three-day build interval
+    runs-on: ubuntu-latest
+    outputs:
+      run_build: ${{ steps.gate.outputs.run_build }}
+    steps:
+      - name: Decide whether to build
+        id: gate
+        shell: bash
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" != "schedule" ]]; then
+            run_build=true
+          else
+            # Anchor the cadence on 2026-11-20: builds then repeat every 72 hours.
+            today=$(date -u +%F)
+            today_epoch=$(date -u -d "$today" +%s)
+            anchor_epoch=$(date -u -d "2026-11-20" +%s)
+            days=$(( (today_epoch - anchor_epoch) / 86400 ))
+            if (( days >= 0 && days % 3 == 0 )); then
+              run_build=true
+            else
+              run_build=false
+            fi
+          fi
+          echo "run_build=$run_build" >> "$GITHUB_OUTPUT"
+
   sync:
     name: Update private branch from upstream
+    needs: schedule-gate
+    if: needs.schedule-gate.outputs.run_build == 'true'
     runs-on: ubuntu-latest
     outputs:
       sha: ${{ steps.push.outputs.sha }}
