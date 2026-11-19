@@ -192,8 +192,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           SOURCE_SHA: ${{ needs.sync.outputs.sha }}
         run: |
-          tag="daily-$(date -u +%Y%m%d)-${{ github.run_number }}"
-          title="86Box daily build $(date -u +%Y-%m-%d)"
+          tag="daily-${{ needs.sync.outputs.release_date }}-${{ github.run_number }}"
+          title="86Box daily build ${{ needs.sync.outputs.release_date }}"
           notes="Daily build of jalavera/86Box branch pc1512-vram-nomirror, synchronized with upstream 86Box/master. Source: $SOURCE_SHA"
           # All matrix jobs share one release. The first creates it; the
           # others reuse it and upload their own uniquely named asset.
