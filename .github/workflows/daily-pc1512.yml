@@ -180,5 +180,7 @@ jobs:
             gh release create "$tag" --repo "$GITHUB_REPOSITORY" \
               --title "$title" --target "$SOURCE_SHA" --notes "$notes" || \
             gh release view "$tag" --repo "$GITHUB_REPOSITORY"
+          # Convert the previous daily prerelease to a normal release once.
+          gh release edit daily-20261118-12 --prerelease=false --repo "$GITHUB_REPOSITORY" || true
           gh release edit "$tag" --prerelease=false --repo "$GITHUB_REPOSITORY"
-      gh release upload "$tag" dist/* --repo "$GITHUB_REPOSITORY"
+          gh release upload "$tag" dist/* --repo "$GITHUB_REPOSITORY"
