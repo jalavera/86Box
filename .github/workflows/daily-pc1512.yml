@@ -51,6 +51,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       sha: ${{ steps.push.outputs.sha }}
+      official_build: ${{ steps.metadata.outputs.official_build }}
+      release_date: ${{ steps.metadata.outputs.release_date }}
     steps:
       - name: Checkout private branch
         uses: actions/checkout@v4
@@ -78,6 +80,19 @@ jobs:
         run: |
           git push origin HEAD:pc1512-vram-nomirror
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Read official 86Box build number and release date
+        id: metadata
+        shell: bash
+        run: |
+          official_build=$(curl -fsSL https://ci.86box.net/job/86Box/lastSuccessfulBuild/buildNumber | tr -d '\\r\\n')
+          if [[ ! "$official_build" =~ ^[0-9]+$ ]]; then
+            echo "Invalid official Jenkins build number: $official_build" >&2
+            exit 1
+          fi
+          release_date=$(date -u +%Y%m%d)
+          echo "official_build=$official_build" >> "$GITHUB_OUTPUT"
+          echo "release_date=$release_date" >> "$GITHUB_OUTPUT"
+          echo "Using official 86Box build #$official_build; release date $release_date"
 
   build:
     name: Build ${{ matrix.label }}
@@ -87,22 +102,28 @@ jobs:
       matrix:
         include:
           - label: Linux x86_64
+            asset: Linux.x86_64
             os: ubuntu-26.04
             platform: linux
           - label: Linux ARM64
+            asset: Linux.ARM64
             os: ubuntu-26.04-arm
             platform: linux
           - label: macOS Apple Silicon
+            asset: macOS.AppleSilicon
             os: macos-15
             platform: macos
           - label: macOS Intel
+            asset: macOS.Intel
             os: macos-15-intel
             platform: macos
           - label: Windows x64
+            asset: Windows.x64
             os: windows-2022
             platform: windows
             msystem: UCRT64
           - label: Windows ARM64
+            asset: Windows.ARM64
             os: windows-11-arm
             platform: windows
             msystem: CLANGARM64
@@ -155,7 +176,7 @@ jobs:
         run: |
           cmake --install build --prefix package
           mkdir -p dist
-          cmake -E tar cf "dist/86Box-${{ matrix.label }}.zip" --format=zip package
+          cmake -E tar cf "dist/86Box-b${{ needs.sync.outputs.official_build }}-jalavera-${{ needs.sync.outputs.release_date }}-${{ matrix.asset }}.zip" --format=zip package
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
