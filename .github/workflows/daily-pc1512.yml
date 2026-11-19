@@ -178,6 +178,7 @@ jobs:
           # others reuse it and upload their own uniquely named asset.
           gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
             gh release create "$tag" --repo "$GITHUB_REPOSITORY" \
-              --title "$title" --prerelease --target "$SOURCE_SHA" --notes "$notes" || \
+              --title "$title" --target "$SOURCE_SHA" --notes "$notes" || \
             gh release view "$tag" --repo "$GITHUB_REPOSITORY"
-          gh release upload "$tag" dist/* --repo "$GITHUB_REPOSITORY"
+          gh release edit "$tag" --prerelease=false --repo "$GITHUB_REPOSITORY"
+      gh release upload "$tag" dist/* --repo "$GITHUB_REPOSITORY"
