@@ -64,6 +64,11 @@ jobs:
         with:
           persist-credentials: false
 
+      # build.sh derives the companion assets and mdsx repository URLs from
+      # origin. This workflow runs in a fork, so point origin at upstream 86Box.
+      - name: Use upstream repository for companion sources
+        run: git remote set-url origin https://github.com/86Box/86Box.git
+
       - name: Set up MacPorts
         id: macports
         uses: ./.github/actions/setup-macports
