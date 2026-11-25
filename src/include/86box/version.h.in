@@ -31,7 +31,7 @@
 #cmakedefine EMU_BUILD     "@EMU_BUILD@"
 #define EMU_BUILD_NUM      @EMU_BUILD_NUM@
 #cmakedefine EMU_GIT_HASH  "@EMU_GIT_HASH@"
-#cmakedefine GITHUB_ACTIONS_BUILD "@GITHUB_ACTIONS_BUILD@"
+#cmakedefine EMU_DAILY_BUILD "@EMU_DAILY_BUILD@"
 
 #ifdef BETA_BUILD
 # define EMU_VERSION_SUFFIX " Beta"

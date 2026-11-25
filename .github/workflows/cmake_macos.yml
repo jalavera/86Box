@@ -141,9 +141,16 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
+      - name: Get official 86Box Daily Build number
+        run: |
+          daily_build=$(curl -fsSL 'https://ci.86box.net/job/86Box/lastSuccessfulBuild/api/json?tree=number' | jq -er '.number')
+          case "$daily_build" in ''|*[!0-9]*) echo "Invalid 86Box Daily Build number: $daily_build" >&2; exit 1;; esac
+          echo "EMU_DAILY_BUILD=$daily_build" >> "$GITHUB_ENV"
+
       - name: Configure CMake
         run: >-
           cmake -S . -B build --preset ${{ matrix.build.preset }}
+          -D EMU_DAILY_BUILD="$EMU_DAILY_BUILD"
           -D QT=${{ matrix.ui.qt }}
           -D USE_QT6=${{ matrix.ui.qt6 }}
           -D Qt5_ROOT=$(brew --prefix qt@5)
