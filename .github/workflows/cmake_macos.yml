@@ -152,6 +152,7 @@ jobs:
           -D Qt6LinguistTools_ROOT=$(brew --prefix qt)
           -D OpenAL_ROOT=$(brew --prefix openal-soft)
           -D LIBSERIALPORT_ROOT=$(brew --prefix libserialport)
+          -D GITHUB_ACTIONS_BUILD=${{ github.run_number }}
 
       - name: Build
         run: cmake --build build

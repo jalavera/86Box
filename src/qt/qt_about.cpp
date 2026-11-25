@@ -39,6 +39,9 @@ About::About(QWidget *parent)
 #ifdef EMU_GIT_HASH
     versioninfo = QString(" [%1]").arg(EMU_GIT_HASH);
 #endif
+#ifdef GITHUB_ACTIONS_BUILD
+    versioninfo.append(QString(" [GitHub Actions build #%1]").arg(GITHUB_ACTIONS_BUILD));
+#endif
 #ifdef USE_DYNAREC
 #    define DYNAREC_STR "dynarec"
 #else
