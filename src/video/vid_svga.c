@@ -2012,7 +2012,9 @@ svga_decode_addr(svga_t *svga, uint32_t addr, int write)
        display memory window. Windows 98 multi-monitor support relies on this
        to verify a secondary VGA card's legacy memory is off before it lets
        the card decode its PCI memory. */
-    if (!(svga->miscout & 0x02))
+    if (!(svga->miscout & 0x02) &&
+        ((svga->ven_mem_enabled == NULL) ||
+         !svga->ven_mem_enabled(svga->ven_mem_enabled_priv)))
         return 0xffffffff;
 
     addr &= 0x1ffff;
@@ -2297,6 +2299,7 @@ svga_read_common(uint32_t addr, uint8_t linear, void *priv)
     } else if (svga->chain4 && !svga->force_old_addr) {
         readplane = addr & 3;
         addr      = ((addr & 0xfffc) << 2) | ((addr & 0x30000) >> 14) | (addr & ~0x3ffff);
+        latch_addr = addr;
     } else if (svga->chain2_read) {
         readplane = (readplane & 2) | (addr & 1);
         addr &= ~1;
