@@ -1,6 +1,8 @@
 name: PC1512 daily builds
 
 on:
+  # Manual run: Actions > PC1512 daily builds > Run workflow
+  workflow_dispatch:
   push:
     branches: [master]
     paths:
