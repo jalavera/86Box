@@ -162,12 +162,18 @@ jobs:
           qt6: false
 
       - name: Configure
+        env:
+          # (About box) the official 86Box build number this build follows,
+          # and the fork source it was built from
+          EMU_FLAGS_BUILD: ${{ needs.sync.outputs.official_build }}
+          EMU_FLAGS_SHA: ${{ needs.sync.outputs.sha }}
         run: |
+          build_flags=(-D "EMU_BUILD=build ${EMU_FLAGS_BUILD}" -D "EMU_BUILD_NUM=${EMU_FLAGS_BUILD}" -D "EMU_GIT_HASH=${EMU_FLAGS_SHA:0:7}")
           if [ "${{ matrix.platform }}" = "macos" ]; then
             export PKG_CONFIG_PATH="$(brew --prefix readline)/lib/pkgconfig:$(brew --prefix openal-soft)/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
-            cmake -S . -B build --preset development -D QT=on -D USE_QT6=off -D USE_SDL_SHADER=off -D Qt5_ROOT="$(brew --prefix qt@5)" -D Qt5LinguistTools_ROOT="$(brew --prefix qt@5)" -D LibArchive_ROOT="$(brew --prefix libarchive)" -D OPENAL_INCLUDE_DIR="$(brew --prefix openal-soft)/include" -D OPENAL_LIBRARY="$(brew --prefix openal-soft)/lib/libopenal.dylib"
+            cmake -S . -B build --preset development -D QT=on -D USE_QT6=off -D USE_SDL_SHADER=off -D Qt5_ROOT="$(brew --prefix qt@5)" -D Qt5LinguistTools_ROOT="$(brew --prefix qt@5)" -D LibArchive_ROOT="$(brew --prefix libarchive)" -D OPENAL_INCLUDE_DIR="$(brew --prefix openal-soft)/include" -D OPENAL_LIBRARY="$(brew --prefix openal-soft)/lib/libopenal.dylib" "${build_flags[@]}"
           else
-            cmake -S . -B build --preset development -D QT=on -D USE_QT6=off -D USE_SDL_SHADER=off
+            cmake -S . -B build --preset development -D QT=on -D USE_QT6=off -D USE_SDL_SHADER=off "${build_flags[@]}"
           fi
 
       - name: Compile
